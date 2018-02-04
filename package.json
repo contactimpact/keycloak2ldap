@@ -1,0 +1,18 @@
+{
+  "name": "ldap-keycloak-proxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ldapjs": "^1.0.2",
+    "nconf": "^0.10.0",
+    "request": "^2.83.0",
+    "simple-oauth2": "^1.5.0"
+  }
+}
