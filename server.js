@@ -75,6 +75,7 @@ oauth2.ownerPassword.getToken(nconf.get('apiUser'), (error, result) => {
 
   const getUsers = function(req, res, next) {
     req.users = {};
+    getUsersRequest.auth.bearer = accessToken.token.access_token;
     request(getUsersRequest, function(error, response, body) {
       body.forEach(function(user, id) {
         if (user.enabled) {
