@@ -1,5 +1,5 @@
 {
-  "name": "ldap-keycloak-proxy",
+  "name": "keycloak2ldap",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node $NODE_DEBUG_OPTION server.js"
   },
-  "author": "",
+  "author": "Michael Ermer <michael.ermer@ermer.de>",
   "license": "ISC",
   "dependencies": {
     "bunyan": "^1.8.12",
