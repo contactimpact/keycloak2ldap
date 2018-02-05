@@ -24,6 +24,7 @@ nconf.defaults({
   },
   usersDn: 'ou=users, o=company, dc=group, dc=de',
   servicesDn: 'ou=services, o=company, dc=group, dc=de',
+  realm: 'master',
   keycloak: {
     auth: {
       tokenHost: 'http://keycloak-url',
@@ -55,9 +56,8 @@ const authorize = function(req, res, next) {
     return next(new ldap.InsufficientAccessRightsError());
   }
   req.client = clients[clientId];
-  // if (req.client.secret !== req.connection.ldap.bindPassword) {
-  //   return next(new ldap.InsufficientAccessRightsError());
-  // }
+  log.debug('authorize', 'client set', req.client.id);
+
   return next();
 };
 
@@ -75,8 +75,7 @@ const refreshToken = function (req, res, next) {
 
 var getUsersRequest = {
   method: 'GET',
-  uri: nconf.get('keycloak:auth:tokenHost') + '/auth/admin/realms/master/users',
-  //    uri: 'https://sso.df-srv.de/auth/admin/realms/master/users/'+userId+'/role-mappings/clients/57bbe8df-8f70-4596-b007-e6615bd9aaad/composite',
+  uri: nconf.get('keycloak:auth:tokenHost') + '/auth/admin/realms/' + nconf.get('realm') + '/users',
   json: true,
   auth: {
     bearer: ''
@@ -146,7 +145,7 @@ server.bind(nconf.get('servicesDn'), function(req, res, next) {
           return next(new ldap.InvalidCredentialsError());
         }
         clients[clientId] = {
-          clientId: clientId,
+          id: clientId,
           secret: req.credentials,
           accessToken: oauth2.accessToken.create(result),
           oauth2: oauth2
@@ -169,7 +168,7 @@ server.bind(nconf.get('usersDn'), pre, function(req, res, next) {
     var cn = cnContainer[0].attrs.cn.value;
   }
   if (cn && req.credentials) {
-    req.cient.oauth2.ownerPassword.getToken({
+    req.client.oauth2.ownerPassword.getToken({
       username: cn,
       password: req.credentials
     }, (error) => {
