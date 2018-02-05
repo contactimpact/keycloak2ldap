@@ -4,7 +4,7 @@ This is a simple proxy meant to connect tools with ldap support to keyclaok.
 
 ## Usage
 
-If your client ìd in keycloak is sentry` your bindDN will be:
+If your client id in keycloak is `sentry` your bindDN will be:
 
     cn=sentry, ou=services, o=company, dc=company, dc=de
     
