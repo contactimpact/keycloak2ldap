@@ -169,7 +169,7 @@ server.bind(nconf.get('usersDn'), pre, function(req, res, next) {
     var cn = cnContainer[0].attrs.cn.value;
   }
   if (cn && req.credentials) {
-    req.cient.ownerPassword.getToken({
+    req.cient.oauth2.ownerPassword.getToken({
       username: cn,
       password: req.credentials
     }, (error) => {
