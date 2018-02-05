@@ -65,7 +65,7 @@ const refreshToken = function (req, res, next) {
   log.debug('refreshToken', req.client.id);
   if (req.client.accessToken.expired()) {
     req.client.accessToken.refresh((error, result) => {
-      req.client.accessToken = result;
+      req.client.accessToken = oauth2.accessToken.create(result);
       return next();
     });
   } else {
