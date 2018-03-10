@@ -44,7 +44,7 @@ const clients = {
 };
 
 const authorize = function(req, res, next) {
-  log.debug('authorize', req.connection.ldap.bindDN.toString(), req.connection.ldap.bindPassword);
+  log.info('authorize', req.connection.ldap.bindDN.toString());
   var cnContainer = req.connection.ldap.bindDN.rdns.filter(function(dn) {
     return dn.attrs && dn.attrs.cn;
   });
@@ -65,6 +65,12 @@ const refreshToken = function (req, res, next) {
   log.debug('refreshToken', req.client.id);
   if (req.client.accessToken.expired()) {
     req.client.accessToken.refresh((error, result) => {
+      if (error) {
+        req.client.oauth2.ownerPassword.getToken(nconf.get('apiUser'), (error, result) => {
+          req.client.accessToken = req.client.oauth2.accessToken.create(result);
+          return next();
+        });
+      }
       req.client.accessToken = result;
       return next();
     });
@@ -176,6 +182,7 @@ server.bind(nconf.get('usersDn'), pre, function(req, res, next) {
         return next(new ldap.InvalidCredentialsError());
       }
       res.end();
+      return next();
     });
   } else {
     return next(new ldap.InvalidCredentialsError());
